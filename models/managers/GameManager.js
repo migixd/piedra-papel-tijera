@@ -7,6 +7,8 @@ const WINNERS = Object.freeze({
   EMPATE: 'EMPATE',
 });
 
+const WINNING_SCORE = 5;
+
 const ALL_MOVES = Object.values(MoveVO.TYPES);
 
 const BEATS = Object.freeze({
@@ -38,7 +40,19 @@ const GameManager = () => {
     return new RoundResultVO(playerMove, computerMove, winner);
   }
 
-  function isMatchOver(playerScore, computerScore, winningScore) {
+  function applyRoundResult(playerScore, computerScore, roundResult) {
+    if (roundResult.winner === WINNERS.JUGADOR) {
+      return { playerScore: playerScore + 1, computerScore };
+    }
+
+    if (roundResult.winner === WINNERS.COMPUTADORA) {
+      return { playerScore, computerScore: computerScore + 1 };
+    }
+
+    return { playerScore, computerScore };
+  }
+
+  function isMatchOver(playerScore, computerScore, winningScore = WINNING_SCORE) {
     return playerScore >= winningScore || computerScore >= winningScore;
   }
 
@@ -54,6 +68,7 @@ const GameManager = () => {
     getRandomMove,
     determineWinner,
     playRound,
+    applyRoundResult,
     isMatchOver,
     getMatchWinner,
   };
@@ -61,5 +76,6 @@ const GameManager = () => {
 
 GameManager.WINNERS = WINNERS;
 GameManager.ALL_MOVES = ALL_MOVES;
+GameManager.WINNING_SCORE = WINNING_SCORE;
 
 module.exports = GameManager;
